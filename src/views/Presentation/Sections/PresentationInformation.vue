@@ -92,14 +92,12 @@ import DefaultCounterCard from "../../../examples/cards/counterCards/DefaultCoun
 <script>
 import axios from "axios";
 
-
 export default {
   name: "HelloWorld",
   data() {
     return {
       selectedFile: null,
-      littleImage:
-        "src/assets/img/little-background.jpeg",
+      littleImage: "src/assets/img/little-background.jpeg",
       title: "",
       calorie: "",
       suffix: "",
@@ -122,11 +120,12 @@ export default {
     onUpload() {
       const fd = new FormData();
       fd.append("image", this.selectedFile, this.selectedFile.name);
-      axios.get("http://localhost:3001/posts", fd).then((res) => {
-        if (res.status == 200) {
-          this.title = res.data[0].label;
-          this.calorie = res.data[0].calorie;
-          this.suffix = res.data[0].suffix;
+      axios.post("http://127.0.0.1:5000/predict", fd).then((res) => {
+        if (res.status === 200) {
+          let data = res.data.prediction[0];
+          this.title = data.label;
+          this.calorie = data.calories;
+          this.suffix = "Kcal";
         }
       });
     },
