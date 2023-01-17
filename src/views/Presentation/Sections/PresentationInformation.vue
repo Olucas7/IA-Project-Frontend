@@ -12,7 +12,7 @@ import DefaultCounterCard from "../../../examples/cards/counterCards/DefaultCoun
             <div class="row">
               <div class="col-md-4 position-relative">
                 <DefaultCounterCard
-                  color="success"
+                  color="dark"
                   :title="title"
                   description=""
                   :count="calorie"
@@ -55,8 +55,8 @@ import DefaultCounterCard from "../../../examples/cards/counterCards/DefaultCoun
             alt="image"
           />
         </div>
-        <div class="col-lg-6 ms-auto">
-          <div class="row justify-content-start">
+        <div class="col-lg-4 ms-auto me-auto p-lg-4 mt-lg-0 mt-4">
+          <div id="upload-container" class="col justify-content-center">
             <DefaultInfoCard
               icon="flip_to_front"
               title="Upload Image"
@@ -70,7 +70,7 @@ import DefaultCounterCard from "../../../examples/cards/counterCards/DefaultCoun
             />
           </div>
           <div class="row justify-content-start mt-5">
-            <div class="container">
+            <div id="upload-container" class="container">
               <button class="upload-btn" @click="$refs.fileInput.click()">
                 <MaterialButton variant="gradient" color="secondary"
                   >Pick Photo</MaterialButton
@@ -82,6 +82,23 @@ import DefaultCounterCard from "../../../examples/cards/counterCards/DefaultCoun
                 >
               </button>
             </div>
+          </div>
+        </div>
+        <div class="col-lg-3 ms-auto me-auto p-lg-4 mt-lg-0 mt-4">
+          <div class="justify-content-start ">
+            <DefaultCounterCard
+              color="success"
+              title="Probability"
+              :description="
+                'The model ensures that this is a ' +
+                title +
+                ' with this percentage accuracy.'
+              "
+              :count="probability"
+              suffix="%"
+              :duration="3000"
+              divider="vertical"
+            />
           </div>
         </div>
       </div>
@@ -101,6 +118,7 @@ export default {
       title: "",
       calorie: "",
       suffix: "",
+      probability: 0,
     };
   },
   computed: {
@@ -123,9 +141,11 @@ export default {
       axios.post("http://127.0.0.1:5000/predict", fd).then((res) => {
         if (res.status === 200) {
           let data = res.data.prediction[0];
-          this.title = data.label;
+          console.log(data);
+          this.title = data.label.toUpperCase();
           this.calorie = data.calories;
           this.suffix = "Kcal";
+          this.probability = data.probability * 100;
         }
       });
     },
@@ -137,5 +157,10 @@ export default {
 .upload-btn {
   border: 0;
   background: white;
+}
+#upload-container{
+  display: flex;
+  align-content: center;
+  justify-content: center;
 }
 </style>
